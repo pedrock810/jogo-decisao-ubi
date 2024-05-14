@@ -22,7 +22,8 @@ function Login({ setIsLoggedIn, isLoggedIn, setUserName }) {
         setErrors(Validation(values));
 
         if (errors.email === "" && errors.password === "") {
-            axios.post('http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/login', values)
+            axios.post('http://localhost:3306/login', values)
+            //axios.post('https://jogo-decisao-backend.onrender.com/login', values)
                 .then(res => {
                     if (res.data.message === "Success") {
                         setIsLoggedIn(true);

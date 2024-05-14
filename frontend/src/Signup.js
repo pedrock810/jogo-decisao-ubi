@@ -24,7 +24,8 @@ function Signup() {
         setErrors(formErrors);
 
         if (Object.values(formErrors).every(error => error === '')) {
-            axios.post('http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/signup', values)
+            axios.post('http://localhost:3306/signup', values)
+            //axios.post('https://database-1.c9e6y6cqup9r.eu-west-2.rds.amazonaws.com/signup', values)
             .then(res => {
                 if (res.data === "Success") {
                     navigate('/');
