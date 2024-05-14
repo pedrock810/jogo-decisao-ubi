@@ -12,7 +12,7 @@ function Ranking() {
 
     const fetchRanking = async () => {
         try {
-            const response = await axios.get('https://jogo-decisao-ubi-backend.vercel.app/ranking');
+            const response = await axios.get('http://localhost:3306/ranking');
             //const response = await axios.get('https://jogo-decisao-backend.onrender.com/ranking');
             setRanking(response.data);
         } catch (error) {

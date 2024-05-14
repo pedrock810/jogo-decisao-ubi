@@ -25,7 +25,7 @@ function UsersManage({ setIsLoggedIn }) {
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
-        fetch('https://jogo-decisao-ubi-backend.vercel.app/admin/users')
+        fetch('http://localhost:3306/admin/users')
         //fetch('https://jogo-decisao-backend.onrender.com/admin/users')
             .then(res => res.json())
             .then(data => setData(data))
@@ -52,7 +52,7 @@ function UsersManage({ setIsLoggedIn }) {
 
     const handleSave = (event) => {
         event.preventDefault();
-        axios.put(`https://jogo-decisao-ubi-backend.vercel.app/admin/users/${editedUserInfo.id}`, editedUserInfo)
+        axios.put(`http://localhost:3306/admin/users/${editedUserInfo.id}`, editedUserInfo)
         //axios.put(`https://jogo-decisao-backend.onrender.com/admin/users/${editedUserInfo.id}`, editedUserInfo)
             .then(res => {
                 if (res.data === "Success") {
@@ -99,7 +99,7 @@ function UsersManage({ setIsLoggedIn }) {
     };    
 
     const confirmDeleteUser = () => {
-        axios.delete(`https://jogo-decisao-ubi-backend.vercel.app/admin/users/${userIdToDelete}`)
+        axios.delete(`http://localhost:3306/admin/users/${userIdToDelete}`)
         //axios.delete(`https://jogo-decisao-backend.onrender.com/admin/users/${userIdToDelete}`)
             .then(res => {
                 if (res.data === "Success") {
