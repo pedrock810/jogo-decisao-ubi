@@ -36,7 +36,7 @@ const StartGame = () => {
 
     const fetchQuestions = useCallback(async () => {
         try {
-            const response = await axios.get('http://localhost:3306/admin/perguntas');
+            const response = await axios.get('https://jogo-decisao-ubi-backend.vercel.app/admin/perguntas');
             //const response = await axios.get('https://jogo-decisao-backend.onrender.com/admin/perguntas');
             setQuestions(response.data);
             if (response.data[currentQuestionIndex]) {
@@ -52,7 +52,7 @@ const StartGame = () => {
 
     const fetchPontuacao = useCallback(async () => {
         try {
-            const response = await axios.get('http://localhost:3306/user/pontuacao', {
+            const response = await axios.get('https://jogo-decisao-ubi-backend.vercel.app/user/pontuacao', {
             //const response = await axios.get('https://jogo-decisao-backend.onrender.com/user/pontuacao', {    
                 headers: {
                     userid: userId
@@ -164,7 +164,7 @@ const StartGame = () => {
                 }
             }
             
-            const response = await axios.put('http://localhost:3306/user/pontuacao', {
+            const response = await axios.put('https://jogo-decisao-ubi-backend.vercel.app/user/pontuacao', {
             //const response = await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
                 userId: userId,
                 pontuacao: pontuacaoAtualizada

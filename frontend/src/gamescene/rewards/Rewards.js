@@ -20,7 +20,7 @@ function Rewards() {
 
     const fetchPontuacao = useCallback(async () => {
         try {
-            const response = await axios.get('http://localhost:3306/user/pontuacao', {
+            const response = await axios.get('https://jogo-decisao-ubi-backend.vercel.app/user/pontuacao', {
             //const response = await axios.get('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
                 headers: {
                     userid: userId
@@ -36,7 +36,7 @@ function Rewards() {
         const fetchData = async () => {
             await fetchPontuacao();
             try {
-                const response = await axios.get('http://localhost:3306/admin/rewards');
+                const response = await axios.get('https://jogo-decisao-ubi-backend.vercel.app/admin/rewards');
                 //const response = await axios.get('https://jogo-decisao-backend.onrender.com/admin/rewards');
                 setRewards(response.data);
             } catch (error) {
@@ -50,7 +50,7 @@ function Rewards() {
         if (pontuacao >= reward.custo) {
             try {
                 const updatedPontuacao = pontuacao - reward.custo;
-                await axios.put('http://localhost:3306/user/pontuacao', {
+                await axios.put('https://jogo-decisao-ubi-backend.vercel.app/user/pontuacao', {
                 //await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
                     userId: userId,
                     pontuacao: updatedPontuacao

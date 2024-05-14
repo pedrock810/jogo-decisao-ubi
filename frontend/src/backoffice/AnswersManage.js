@@ -34,7 +34,7 @@ function AnswersManage({ setIsLoggedIn }) {
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
-        fetch('http://localhost:3306/admin/perguntas')
+        fetch('https://jogo-decisao-ubi-backend.vercel.app/admin/perguntas')
         //fetch('https://jogo-decisao-backend.onrender.com/admin/perguntas')
             .then(res => res.json())
             .then(data => setData(data))
@@ -61,11 +61,11 @@ function AnswersManage({ setIsLoggedIn }) {
             return;
         }
     
-        axios.post('http://localhost:3306/admin/perguntas', newQuestionInfo)
+        axios.post('https://jogo-decisao-ubi-backend.vercel.app/admin/perguntas', newQuestionInfo)
         //axios.post('https://jogo-decisao-backend.onrender.com/admin/perguntas', newQuestionInfo)
             .then(res => {
                 if (res.data === "Success") {
-                    fetch('http://localhost:3306/admin/perguntas')
+                    fetch('https://jogo-decisao-ubi-backend.vercel.app/admin/perguntas')
                     //fetch('https://jogo-decisao-backend.onrender.com/admin/perguntas')
                         .then(res => res.json())
                         .then(data => setData(data))
@@ -103,7 +103,7 @@ function AnswersManage({ setIsLoggedIn }) {
             return;
         }
 
-        axios.put(`http://localhost:3306/admin/perguntas/${editedQuestionInfo.id}`, editedQuestionInfo)
+        axios.put(`https://jogo-decisao-ubi-backend.vercel.app/admin/perguntas/${editedQuestionInfo.id}`, editedQuestionInfo)
         //axios.put(`https://jogo-decisao-backend.onrender.com/admin/perguntas/${editedQuestionInfo.id}`, editedQuestionInfo)
             .then(res => {
                 if (res.data === "Success") {
@@ -142,7 +142,7 @@ function AnswersManage({ setIsLoggedIn }) {
     };
 
     const confirmDeleteQuestion = () => {
-        axios.delete(`http://localhost:3306/admin/perguntas/${questionIdToDelete}`)
+        axios.delete(`https://jogo-decisao-ubi-backend.vercel.app/admin/perguntas/${questionIdToDelete}`)
         //axios.delete(`https://jogo-decisao-backend.onrender.com/admin/perguntas/${questionIdToDelete}`)
             .then(res => {
                 if (res.data === "Success") {
