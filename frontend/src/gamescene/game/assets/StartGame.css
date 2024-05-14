@@ -1,0 +1,83 @@
+.card-container {
+  width: 400px;
+  position: relative;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.arrows {
+  display: none;
+}
+
+.arrow {
+  width: 70px;
+  height: 70px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.arrow.left {
+  background-color: #ff0000;
+}
+
+.arrow.right {
+  background-color: #00ff00; 
+}
+
+@media only screen and (min-width: 768px) {
+  .arrows {
+    display: flex; 
+    position: absolute;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 20px;
+    z-index: 999; 
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .card {
+    height: 70vh !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .card h2 {
+    font-size: 24px; 
+    margin-bottom: 10px;
+    text-align: center; 
+  }
+}
+
+.card.rotate-left {
+  transform: translateX(-150%) rotate(-180deg);
+}
+
+.card.rotate-right {
+  transform: translateX(150%) rotate(180deg);
+}
+
+.card.return {
+  transform: translateX(0) rotate(0deg); 
+}
