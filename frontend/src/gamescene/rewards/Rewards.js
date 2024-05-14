@@ -20,8 +20,7 @@ function Rewards() {
 
     const fetchPontuacao = useCallback(async () => {
         try {
-            const response = await axios.get('http://localhost:3306/user/pontuacao', {
-            //const response = await axios.get('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
+            const response = await axios.get('http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/user/pontuacao', {
                 headers: {
                     userid: userId
                 }
@@ -36,8 +35,7 @@ function Rewards() {
         const fetchData = async () => {
             await fetchPontuacao();
             try {
-                const response = await axios.get('http://localhost:8081/admin/rewards');
-                //const response = await axios.get('https://jogo-decisao-backend.onrender.com/admin/rewards');
+                const response = await axios.get('http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/admin/rewards');
                 setRewards(response.data);
             } catch (error) {
                 console.error('Erro ao obter as recompensas:', error);
@@ -50,8 +48,7 @@ function Rewards() {
         if (pontuacao >= reward.custo) {
             try {
                 const updatedPontuacao = pontuacao - reward.custo;
-                await axios.put('http://localhost:8081/user/pontuacao', {
-                //await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
+                await axios.put('http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/user/pontuacao', {
                     userId: userId,
                     pontuacao: updatedPontuacao
                 });

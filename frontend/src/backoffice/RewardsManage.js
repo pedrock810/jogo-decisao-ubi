@@ -35,8 +35,7 @@ function RewardsManage({ setIsLoggedIn }) {
     }, []);
 
     const fetchRewards = () => {
-        fetch('http://localhost:3306/admin/rewards')
-        //fetch('https://jogo-decisao-backend.onrender.com/admin/rewards')
+        fetch('http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/admin/rewards')
             .then(res => res.json())
             .then(data => setData(data))
             .catch(err => console.log(err));
@@ -54,8 +53,7 @@ function RewardsManage({ setIsLoggedIn }) {
             return;
         }
 
-        axios.post('http://localhost:3306/admin/rewards', newRewardInfo)
-        //axios.post('https://jogo-decisao-backend.onrender.com/admin/rewards', newRewardInfo)
+        axios.post('http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/admin/rewards', newRewardInfo)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();
@@ -80,8 +78,7 @@ function RewardsManage({ setIsLoggedIn }) {
 
     const handleSaveEditReward = (event) => {
         event.preventDefault();
-        axios.put(`http://localhost:3306/admin/rewards/${editedRewardInfo.id}`, editedRewardInfo)
-        //axios.put(`https://jogo-decisao-backend.onrender.com/admin/rewards/${editedRewardInfo.id}`, editedRewardInfo)
+        axios.put(`http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/admin/rewards/${editedRewardInfo.id}`, editedRewardInfo)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();
@@ -100,8 +97,7 @@ function RewardsManage({ setIsLoggedIn }) {
     };
 
     const confirmDeleteReward = () => {
-        axios.delete(`http://localhost:3306/admin/rewards/${rewardIdToDelete}`)
-        //axios.delete(`https://jogo-decisao-backend.onrender.com/admin/rewards/${rewardIdToDelete}`)
+        axios.delete(`http://backend-9g9r71q23-pedros-projects-d6d01913.vercel.app/admin/rewards/${rewardIdToDelete}`)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();
