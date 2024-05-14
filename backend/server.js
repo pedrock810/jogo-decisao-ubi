@@ -23,6 +23,10 @@ db.connect((err) => {
     console.log('Base de dados conectada!');
 });
 
+app.use('/', (req,res) => {
+    res.send("Server is Running!");
+});
+
 //REGISTRO E LOGIN
 app.post('/signup', (req, res) => {
     const { name, email, password } = req.body;
