@@ -23,10 +23,6 @@ db.connect((err) => {
     console.log('Base de dados conectada!');
 });
 
-app.use(cors({
-    origin: 'http://localhost:3000',
-}));
-
 //REGISTRO E LOGIN
 app.post('/signup', (req, res) => {
     const { name, email, password } = req.body;
