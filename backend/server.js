@@ -27,7 +27,6 @@ app.use('/', (req,res) => {
     res.send("Server is Running!");
 });
 
-/*
 //REGISTRO E LOGIN
 app.post('/signup', (req, res) => {
     const { name, email, password } = req.body;
@@ -287,7 +286,7 @@ app.get('/ranking', (req, res) => {
         return res.json(data);
     });
 });
-*/
+
 const PORT = process.env.PORT || 3306;
 
 app.listen(PORT, () => {
