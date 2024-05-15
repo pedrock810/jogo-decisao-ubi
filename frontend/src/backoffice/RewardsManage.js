@@ -36,7 +36,6 @@ function RewardsManage({ setIsLoggedIn }) {
 
     const fetchRewards = () => {
         fetch('http://localhost:3306/admin/rewards')
-        //fetch('https://jogo-decisao-backend.onrender.com/admin/rewards')
             .then(res => res.json())
             .then(data => setData(data))
             .catch(err => console.log(err));
@@ -55,7 +54,6 @@ function RewardsManage({ setIsLoggedIn }) {
         }
 
         axios.post('http://localhost:3306/admin/rewards', newRewardInfo)
-        //axios.post('https://jogo-decisao-backend.onrender.com/admin/rewards', newRewardInfo)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();
@@ -81,7 +79,6 @@ function RewardsManage({ setIsLoggedIn }) {
     const handleSaveEditReward = (event) => {
         event.preventDefault();
         axios.put(`http://localhost:3306/admin/rewards/${editedRewardInfo.id}`, editedRewardInfo)
-        //axios.put(`https://jogo-decisao-backend.onrender.com/admin/rewards/${editedRewardInfo.id}`, editedRewardInfo)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();
@@ -101,7 +98,6 @@ function RewardsManage({ setIsLoggedIn }) {
 
     const confirmDeleteReward = () => {
         axios.delete(`http://localhost:3306/admin/rewards/${rewardIdToDelete}`)
-        //axios.delete(`https://jogo-decisao-backend.onrender.com/admin/rewards/${rewardIdToDelete}`)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();

@@ -15,18 +15,6 @@ const db = mysql.createConnection({
     database: process.env.DB_DATABASE
 });
 
-db.connect((err) => {
-    if(err) {
-        console.log(err.message);
-        return
-    }
-    console.log('Base de dados conectada!');
-});
-
-app.use('/', (req,res) => {
-    res.send("Server is Running!");
-});
-
 //REGISTRO E LOGIN
 app.post('/signup', (req, res) => {
     const { name, email, password } = req.body;
@@ -63,50 +51,36 @@ app.post('/signup', (req, res) => {
 app.post('/login', (req, res) => {
     const { email, password } = req.body;
 
-    console.log('Login request received:', { email, password });
-
     const sql = "SELECT * FROM users WHERE `email` = ?";
-
+    
     db.query(sql, [email], (err, data) => {
         if (err) {
-            console.error('Database error:', err);
-            return res.json({ error: "Database error", details: err });
+            return res.json("Error");
         }
-        console.log('Database query result:', data);
         if (data.length > 0) {
             const user = data[0];
-            console.log('User found:', user);
-
+            
             bcrypt.compare(password, user.senha, (err, result) => {
                 if (err) {
-                    console.error('Bcrypt comparison error:', err);
-                    return res.json({ error: "Comparison error", details: err });
+                    return res.json("Error");
                 }
-                console.log('Bcrypt comparison result:', result);
-
+                
                 if (result) {
-                    console.log('Password match');
                     if (user.isAdmin === 1) {
-                        console.log('Admin user login successful');
                         return res.json({ message: "Success", isAdmin: user.isAdmin, nome: user.nome, userId: user.id });
                     } else {
-                        console.log('Regular user login successful');
                         const checkPontuacaoQuery = "SELECT * FROM pontuacoes WHERE user_id = ?";
                         db.query(checkPontuacaoQuery, [user.id], (err, pontuacaoData) => {
                             if (err) {
-                                console.error('Error fetching pontuacao:', err);
-                                return res.json({ error: "Database error", details: err });
+                                return res.json("Error");
                             }
 
-                            console.log('Pontuacao data:', pontuacaoData);
                             if (pontuacaoData.length === 0) {
                                 const insertPontuacaoQuery = "INSERT INTO pontuacoes (user_id, pontuacao) VALUES (?, 0)";
                                 db.query(insertPontuacaoQuery, [user.id], (err, pontuacaoInsertData) => {
                                     if (err) {
-                                        console.error('Error inserting pontuacao:', err);
-                                        return res.json({ error: "Database error", details: err });
+                                        return res.json("Error");
                                     }
-                                    console.log('Pontuacao inserted:', pontuacaoInsertData);
                                     return res.json({ message: "Success", isAdmin: user.isAdmin, nome: user.nome, userId: user.id });
                                 });
                             } else {
@@ -115,17 +89,14 @@ app.post('/login', (req, res) => {
                         });
                     }
                 } else {
-                    console.log('Password does not match');
                     return res.json("Failed");
                 }
             });
         } else {
-            console.log('No user found with that email');
             return res.json("Failed");
         }
     });
 });
-
 
 //BACKOFFICE
 app.get('/admin/users', (req, res) => {

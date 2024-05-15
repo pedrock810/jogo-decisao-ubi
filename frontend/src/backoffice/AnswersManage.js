@@ -35,7 +35,6 @@ function AnswersManage({ setIsLoggedIn }) {
 
     useEffect(() => {
         fetch('http://localhost:3306/admin/perguntas')
-        //fetch('https://jogo-decisao-backend.onrender.com/admin/perguntas')
             .then(res => res.json())
             .then(data => setData(data))
             .catch(err => console.log(err));
@@ -62,11 +61,9 @@ function AnswersManage({ setIsLoggedIn }) {
         }
     
         axios.post('http://localhost:3306/admin/perguntas', newQuestionInfo)
-        //axios.post('https://jogo-decisao-backend.onrender.com/admin/perguntas', newQuestionInfo)
             .then(res => {
                 if (res.data === "Success") {
                     fetch('http://localhost:3306/admin/perguntas')
-                    //fetch('https://jogo-decisao-backend.onrender.com/admin/perguntas')
                         .then(res => res.json())
                         .then(data => setData(data))
                         .catch(err => console.log(err));
@@ -104,7 +101,6 @@ function AnswersManage({ setIsLoggedIn }) {
         }
 
         axios.put(`http://localhost:3306/admin/perguntas/${editedQuestionInfo.id}`, editedQuestionInfo)
-        //axios.put(`https://jogo-decisao-backend.onrender.com/admin/perguntas/${editedQuestionInfo.id}`, editedQuestionInfo)
             .then(res => {
                 if (res.data === "Success") {
                     const updatedData = data.map(question => {
@@ -143,7 +139,6 @@ function AnswersManage({ setIsLoggedIn }) {
 
     const confirmDeleteQuestion = () => {
         axios.delete(`http://localhost:3306/admin/perguntas/${questionIdToDelete}`)
-        //axios.delete(`https://jogo-decisao-backend.onrender.com/admin/perguntas/${questionIdToDelete}`)
             .then(res => {
                 if (res.data === "Success") {
                     const updatedData = data.filter(question => question.id !== questionIdToDelete);

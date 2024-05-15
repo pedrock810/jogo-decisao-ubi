@@ -27,8 +27,8 @@ function App() {
         {isLoggedIn && <Route path="/home" element={<Home userName={userName} setIsLoggedIn={setIsLoggedIn} userId={localStorage.getItem('userId')}/>} />}
         {isLoggedIn && <Route path="/start-game" element={<StartGame  />} />}
         {isLoggedIn && <Route path="/ranking" element={<Ranking />} />}
-        {isLoggedIn && <Route path="/rewards" element={<Rewards />} />} 
-        {isLoggedIn && <Route path="/tutorial" element={<Tutorial />} />}        
+        {isLoggedIn && <Route path="/rewards" element={<Rewards />} />}        
+        {isLoggedIn && <Route path="/tutorial" element={<Tutorial />} />}  
         {isLoggedIn && <Route path="/admin" element={<Admin setIsLoggedIn={setIsLoggedIn} />} />} 
         {isLoggedIn && <Route path="/admin/users" element={<UsersManage setIsLoggedIn={setIsLoggedIn} />} />} 
         {isLoggedIn && <Route path="/admin/answers" element={<AnswersManage setIsLoggedIn={setIsLoggedIn} />} />}

@@ -25,7 +25,6 @@ function Signup() {
 
         if (Object.values(formErrors).every(error => error === '')) {
             axios.post('http://localhost:3306/signup', values)
-            //axios.post('https://database-1.c9e6y6cqup9r.eu-west-2.rds.amazonaws.com/signup', values)
             .then(res => {
                 if (res.data === "Success") {
                     navigate('/');
