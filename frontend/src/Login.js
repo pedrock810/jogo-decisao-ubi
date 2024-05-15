@@ -22,7 +22,7 @@ function Login({ setIsLoggedIn, isLoggedIn, setUserName }) {
         setErrors(Validation(values));
 
         if (errors.email === "" && errors.password === "") {
-            axios.post('http://localhost:3306/login', values)
+            axios.post('http://localhost:8081/login', values)
             //axios.post('https://jogo-decisao-backend.onrender.com/login', values)
                 .then(res => {
                     if (res.data.message === "Success") {

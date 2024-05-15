@@ -14,7 +14,7 @@ const Tutorial = () => {
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair do Jogo</button>
         <h2>Tutorial</h2>
-        <p>Bem-vindo ao nosso tutorial!</p>
+        <p>Bem-vindo ao tutorial do Jogo de Decisão da Universidade da Beira Interior!</p>
     </div>
   );
 };
