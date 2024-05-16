@@ -24,7 +24,8 @@ function Signup() {
         setErrors(formErrors);
 
         if (Object.values(formErrors).every(error => error === '')) {
-            axios.post('http://localhost:3306/signup', values)
+            axios.post('https://jogo-decisao-backend.onrender.com/signup', values)
+            //axios.post('http://localhost:3306/signup', values)
             .then(res => {
                 if (res.data === "Success") {
                     navigate('/');

@@ -23,6 +23,7 @@ function Login({ setIsLoggedIn, isLoggedIn, setUserName }) {
 
         if (errors.email === "" && errors.password === "") {
             axios.post('https://jogo-decisao-backend.onrender.com/login', values)
+            //axios.post('http://localhost:3306/login', values)
                 .then(res => {
                     if (res.data.message === "Success") {
                         setIsLoggedIn(true);
