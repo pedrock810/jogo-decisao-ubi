@@ -9,10 +9,11 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE
+    host: "database-1.c9e6y6cqup9r.eu-west-2.rds.amazonaws.com",
+    user: "admin",
+    password: "password",
+    database: "quiz",
+    port: "3306"
 });
 
 //REGISTRO E LOGIN
