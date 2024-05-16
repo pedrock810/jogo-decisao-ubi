@@ -31,6 +31,7 @@ const Tutorial = () => {
                     <li>A cada 5 respostas corretas consecutivas, você ganha um bônus de 5 pontos!</li>
                 </ul>
                 <li>Você pode sair do jogo a qualquer momento clicando no botão "Sair do Jogo" no canto superior esquerdo.</li>
+                <li>Ao final do jogo, você pode trocar seus pontos por recompensas da Universidade da Beira Interior.</li>
                 <li>Divirta-se e boa sorte!</li>
             </ol>
         </div>
