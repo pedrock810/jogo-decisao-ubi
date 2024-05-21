@@ -25,7 +25,7 @@
 .arrow {
   width: 70px;
   height: 70px;
-  background-color: #007bff;
+  background-color: #14233b;
   color: #fff;
   font-size: 32px;
   display: flex;
@@ -81,3 +81,4 @@
 .card.return {
   transform: translateX(0) rotate(0deg); 
 }
+
