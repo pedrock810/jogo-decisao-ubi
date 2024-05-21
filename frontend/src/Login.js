@@ -12,6 +12,10 @@ function Login({ setIsLoggedIn, isLoggedIn, setUserName }) {
     });
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
+    const [signupButtonStyle, setSignupButtonStyle] = useState({
+        color: '#14233b',
+        borderColor: '#14233b'
+    });
 
     const handleInput = (event) => {
         setValues(prev => ({ ...prev, [event.target.name]: event.target.value }));
@@ -22,7 +26,7 @@ function Login({ setIsLoggedIn, isLoggedIn, setUserName }) {
         setErrors(Validation(values));
 
         if (errors.email === "" && errors.password === "") {
-            axios.post('https://jogo-decisao-backend.onrender.com/login', values)
+            axios.post('https://jogo-decisao-ubi-back.vercel.app/login', values)
             //axios.post('http://localhost:3306/login', values)
                 .then(res => {
                     if (res.data.message === "Success") {
@@ -68,7 +72,15 @@ function Login({ setIsLoggedIn, isLoggedIn, setUserName }) {
                         </div>
                         <button type='submit' className='btn btn-success w-100'><strong>Entrar</strong></button>
                         <p></p>
-                        <Link to="/signup" className='btn btn-outline-primary w-100'><strong>Criar Conta</strong></Link>
+                        <Link
+                            to="/signup"
+                            className='btn btn-outline-primary w-100'
+                            style={signupButtonStyle}
+                            onMouseEnter={() => setSignupButtonStyle({ backgroundColor: '#14233b', color: '#fff', borderColor: '#14233b' })}
+                            onMouseLeave={() => setSignupButtonStyle({ backgroundColor: 'transparent', color: '#14233b', borderColor: '#14233b' })}
+                        >
+                            <strong>Criar Conta</strong>
+                        </Link>
                     </form>
                 </div>
             </div>
