@@ -7,7 +7,7 @@ import './assets/StartGame.css';
 
 function Pontuacao({ pontuacao }) {
     return (
-        <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: '999' }}>
+        <div className="pontuacao">
             <p>Pontuação: {pontuacao}</p>
         </div>
     );
@@ -52,18 +52,19 @@ const StartGame = () => {
 
     const fetchPontuacao = useCallback(async () => {
         try {
-            //const response = await axios.get('http://localhost:3306/user/pontuacao', {
-            const response = await axios.get('https://jogo-decisao-backend.onrender.com/user/pontuacao', {    
+            const response = await axios.get('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
                 headers: {
                     userid: userId
                 }
             });
-            setPontuacao(response.data);
+            const fetchedPontuacao = Number(response.data); // Converta a pontuação para número
+            setPontuacao(isNaN(fetchedPontuacao) ? 0 : fetchedPontuacao); // Verifique se é NaN e defina como 0 se for
         } catch (error) {
             console.error('Error fetching pontuacao:', error);
+            setPontuacao(0); // Defina a pontuação como 0 em caso de erro
         }
     }, [userId]);
-
+    
     useEffect(() => {
         fetchQuestions();
         fetchPontuacao();
@@ -91,6 +92,12 @@ const StartGame = () => {
     useEffect(() => {
         setElapsedTime(0);
     }, [currentQuestionIndex]);
+
+    useEffect(() => {
+        if (questions[currentQuestionIndex]) {
+            setRespostaCorreta(questions[currentQuestionIndex].resposta_correta);
+        }
+    }, [currentQuestionIndex, questions]);    
 
     const handleSwipeLeft = () => {
         console.log('Esquerda');
@@ -143,33 +150,25 @@ const StartGame = () => {
             
             if (count <= 10) { 
                 pontuacaoAtualizada += perguntaAtual.pontuacao;
-                if (streak > 0 && streak % 5 === 0) {
-                    pontuacaoAtualizada += 5; 
-                    const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
-                    setBonusMessage(randomMessage);
-                }
             } else if (count <= 15) { 
                 pontuacaoAtualizada += (perguntaAtual.pontuacao - 3);
-                if (streak > 0 && streak % 5 === 0) {
-                    pontuacaoAtualizada += 5; 
-                    const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
-                    setBonusMessage(randomMessage);
-                }
             } else { 
                 pontuacaoAtualizada += (perguntaAtual.pontuacao - 5);
-                if (streak > 0 && streak % 5 === 0) {
-                    pontuacaoAtualizada += 5; 
-                    const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
-                    setBonusMessage(randomMessage);
-                }
+            }
+    
+            if (streak > 0 && streak % 5 === 0) {
+                pontuacaoAtualizada += 5; 
+                const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
+                setBonusMessage(randomMessage);
             }
             
-            //const response = await axios.put('http://localhost:3306/user/pontuacao', {
             const response = await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
                 userId: userId,
                 pontuacao: pontuacaoAtualizada
             });
-            setPontuacao(response.data);
+    
+            const updatedPontuacao = Number(response.data); // Converta a pontuação atualizada para número
+            setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao); // Verifique se é NaN e mantenha a pontuação anterior se for
         } catch (error) {
             console.error('Erro ao atualizar pontuação:', error);
         }
@@ -182,12 +181,13 @@ const StartGame = () => {
     const handlers = useSwipeable({
         onSwipedLeft: handleSwipeLeft,
         onSwipedRight: handleSwipeRight,
+        preventScrollOnSwipe: true,
     });
 
     return (
         <div {...handlers} style={{ position: 'relative', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Pontuacao pontuacao={pontuacao} />
-            <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair do Jogo</button>
+            <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair da Partida</button>
             {bonusMessage && (
                 <div className="bonus-message" style={{ position: 'fixed', top: '50px', left: '50%', transform: 'translateX(-50%)', zIndex: '9999', background: '#ffffff', padding: '10px', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
                     {bonusMessage}
@@ -199,6 +199,7 @@ const StartGame = () => {
                         className="swipe"
                         key={questions[currentQuestionIndex].id}
                         preventSwipe={['up', 'down']}
+                        swipeRequirementType="position"
                         onCardLeftScreen={handleSwipeLeft}
                         onCardRightScreen={handleSwipeRight}
                     >
