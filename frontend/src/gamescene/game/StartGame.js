@@ -27,6 +27,7 @@ const StartGame = () => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [streak, setStreak] = useState(0);
     const [bonusMessage, setBonusMessage] = useState('');
+    const [isSwipeDisabled, setIsSwipeDisabled] = useState(false); // Novo estado
 
     const bonusMessages = [
         "Bônus de 5 pontos! Excelente!",
@@ -99,11 +100,12 @@ const StartGame = () => {
         }
     }, [currentQuestionIndex, questions]);    
 
-    const handleSwipeLeft = () => {
+    const handleSwipeLeft = async () => {
+        if (isSwipeDisabled) return;
+        setIsSwipeDisabled(true);
         console.log('Esquerda');
-        setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
         if (respostaCorreta === 'Não') {
-            atualizarPontuacao();
+            await atualizarPontuacao();
             setStreak(prevStreak => prevStreak + 1);
             console.log('Streak:', streak + 1);
         } else {
@@ -111,21 +113,29 @@ const StartGame = () => {
         }
         setTimerRunning(true);
         setCount(0);
-        setTimeout(() => {
-            const card = document.querySelector('.card');
+        const card = document.querySelector('.card');
+        if (card) {
             card.classList.add('rotate-left');
             setTimeout(() => {
                 card.classList.remove('rotate-left');
                 card.classList.add('return'); 
-            }, 300); 
-    }, 300); 
+                setTimeout(() => {
+                    setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
+                    setIsSwipeDisabled(false);
+                }, 300);
+            }, 300);
+        } else {
+            setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
+            setIsSwipeDisabled(false);
+        }
     };
     
-    const handleSwipeRight = () => {
+    const handleSwipeRight = async () => {
+        if (isSwipeDisabled) return;
+        setIsSwipeDisabled(true);
         console.log('Direita');
-        setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
         if (respostaCorreta === 'Sim') {
-            atualizarPontuacao();
+            await atualizarPontuacao();
             setStreak(prevStreak => prevStreak + 1);
             console.log('Streak:', streak + 1);
         } else {
@@ -133,16 +143,25 @@ const StartGame = () => {
         }
         setTimerRunning(true);
         setCount(0);
-        setTimeout(() => {
-            const card = document.querySelector('.card');
+        const card = document.querySelector('.card');
+        if (card) {
             card.classList.add('rotate-right');
             setTimeout(() => {
                 card.classList.remove('rotate-right');
                 card.classList.add('return'); 
-            }, 300); 
-        }, 300); 
+                setTimeout(() => {
+                    setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
+                    requestAnimationFrame(() => {
+                        setIsSwipeDisabled(false);
+                    });
+                }, 300);
+            }, 300);
+        } else {
+            setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
+            setIsSwipeDisabled(false);
+        }
     };
-    
+
     const atualizarPontuacao = async () => {
         try {
             let pontuacaoAtualizada = pontuacao;
@@ -156,8 +175,8 @@ const StartGame = () => {
                 pontuacaoAtualizada += (perguntaAtual.pontuacao - 5);
             }
     
-            if (streak > 0 && streak % 5 === 0) {
-                pontuacaoAtualizada += 5; 
+            if (streak > 0 && streak % 4 === 0) {
+                pontuacaoAtualizada += 4; 
                 const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
                 setBonusMessage(randomMessage);
             }
@@ -200,8 +219,6 @@ const StartGame = () => {
                         key={questions[currentQuestionIndex].id}
                         preventSwipe={['up', 'down']}
                         swipeRequirementType="position"
-                        onCardLeftScreen={handleSwipeLeft}
-                        onCardRightScreen={handleSwipeRight}
                     >
                         <div className="card">
                             <h2>{questions[currentQuestionIndex].pergunta}</h2>
