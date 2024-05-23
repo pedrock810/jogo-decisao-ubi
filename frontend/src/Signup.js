@@ -32,8 +32,8 @@ function Signup() {
             //axios.post('http://localhost:3306/signup', values)
             .then(res => {
                 if (res.data === "Success") {
-                    navigate('/');
                     toast.success("Cadastro realizado com sucesso!");
+                    navigate('/');
                 } else if (res.data === "User already exists") {
                     toast.error("Nome ou email já estão em uso. Por favor, escolha outros.");
                 }
