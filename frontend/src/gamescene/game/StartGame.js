@@ -4,11 +4,23 @@ import TinderCard from 'react-tinder-card';
 import axios from 'axios';
 import { useSwipeable } from 'react-swipeable'; 
 import './assets/StartGame.css';
+import correctSound from './assets/correct.mp3';
+import wrongSound from './assets/wrong.mp3';
 
 function Pontuacao({ pontuacao }) {
     return (
         <div className="pontuacao">
             <p>Pontuação: {pontuacao}</p>
+        </div>
+    );
+}
+
+function Feedback({ feedback }) {
+    if (!feedback) return null;
+
+    return (
+        <div className="feedback-message">
+            <p>{feedback}</p>
         </div>
     );
 }
@@ -27,7 +39,8 @@ const StartGame = () => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [streak, setStreak] = useState(0);
     const [bonusMessage, setBonusMessage] = useState('');
-    const [isSwipeDisabled, setIsSwipeDisabled] = useState(false); // Novo estado
+    const [isSwipeDisabled, setIsSwipeDisabled] = useState(false);
+    const [feedback, setFeedback] = useState(''); 
 
     const bonusMessages = [
         "Bônus de 5 pontos! Excelente!",
@@ -37,7 +50,6 @@ const StartGame = () => {
 
     const fetchQuestions = useCallback(async () => {
         try {
-            //const response = await axios.get('http://localhost:3306/admin/perguntas');
             const response = await axios.get('https://jogo-decisao-backend.onrender.com/admin/perguntas');
             setQuestions(response.data);
             if (response.data[currentQuestionIndex]) {
@@ -58,14 +70,14 @@ const StartGame = () => {
                     userid: userId
                 }
             });
-            const fetchedPontuacao = Number(response.data); // Converta a pontuação para número
-            setPontuacao(isNaN(fetchedPontuacao) ? 0 : fetchedPontuacao); // Verifique se é NaN e defina como 0 se for
+            const fetchedPontuacao = Number(response.data);
+            setPontuacao(isNaN(fetchedPontuacao) ? 0 : fetchedPontuacao);
         } catch (error) {
             console.error('Error fetching pontuacao:', error);
-            setPontuacao(0); // Defina a pontuação como 0 em caso de erro
+            setPontuacao(0);
         }
     }, [userId]);
-    
+
     useEffect(() => {
         fetchQuestions();
         fetchPontuacao();
@@ -79,13 +91,13 @@ const StartGame = () => {
             }, 1000);
         }
         return () => clearInterval(timer);
-    }, [timerRunning]); 
+    }, [timerRunning]);
 
     useEffect(() => {
         if (bonusMessage) {
             const timeout = setTimeout(() => {
                 setBonusMessage('');
-            }, 5000); 
+            }, 5000);
             return () => clearTimeout(timeout);
         }
     }, [bonusMessage]);
@@ -98,18 +110,32 @@ const StartGame = () => {
         if (questions[currentQuestionIndex]) {
             setRespostaCorreta(questions[currentQuestionIndex].resposta_correta);
         }
-    }, [currentQuestionIndex, questions]);    
+    }, [currentQuestionIndex, questions]);
+
+    const playCorrectSound = () => {
+        const audio = new Audio(correctSound);
+        audio.play();
+    };
+
+    const playWrongSound = () => {
+        const audio = new Audio(wrongSound);
+        audio.play();
+    };
 
     const handleSwipeLeft = async () => {
         if (isSwipeDisabled) return;
         setIsSwipeDisabled(true);
         console.log('Esquerda');
         if (respostaCorreta === 'Não') {
+            playCorrectSound();
             await atualizarPontuacao();
             setStreak(prevStreak => prevStreak + 1);
             console.log('Streak:', streak + 1);
+            setFeedback('Resposta correta!');
         } else {
+            playWrongSound();
             setStreak(0);
+            setFeedback('Resposta incorreta!');
         }
         setTimerRunning(true);
         setCount(0);
@@ -118,7 +144,7 @@ const StartGame = () => {
             card.classList.add('rotate-left');
             setTimeout(() => {
                 card.classList.remove('rotate-left');
-                card.classList.add('return'); 
+                card.classList.add('return');
                 setTimeout(() => {
                     setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
                     setIsSwipeDisabled(false);
@@ -128,18 +154,23 @@ const StartGame = () => {
             setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
             setIsSwipeDisabled(false);
         }
+        setTimeout(() => setFeedback(''), 3000);
     };
-    
+
     const handleSwipeRight = async () => {
         if (isSwipeDisabled) return;
         setIsSwipeDisabled(true);
         console.log('Direita');
         if (respostaCorreta === 'Sim') {
+            playCorrectSound();
             await atualizarPontuacao();
             setStreak(prevStreak => prevStreak + 1);
             console.log('Streak:', streak + 1);
+            setFeedback('Resposta correta!');
         } else {
+            playWrongSound();
             setStreak(0);
+            setFeedback('Resposta incorreta!');
         }
         setTimerRunning(true);
         setCount(0);
@@ -148,7 +179,7 @@ const StartGame = () => {
             card.classList.add('rotate-right');
             setTimeout(() => {
                 card.classList.remove('rotate-right');
-                card.classList.add('return'); 
+                card.classList.add('return');
                 setTimeout(() => {
                     setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
                     requestAnimationFrame(() => {
@@ -160,6 +191,7 @@ const StartGame = () => {
             setCurrentQuestionIndex(prevIndex => (prevIndex + 1) % questions.length);
             setIsSwipeDisabled(false);
         }
+        setTimeout(() => setFeedback(''), 3000);
     };
 
     const atualizarPontuacao = async () => {
@@ -186,13 +218,13 @@ const StartGame = () => {
                 pontuacao: pontuacaoAtualizada
             });
     
-            const updatedPontuacao = Number(response.data); // Converta a pontuação atualizada para número
-            setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao); // Verifique se é NaN e mantenha a pontuação anterior se for
+            const updatedPontuacao = Number(response.data);
+            setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao);
         } catch (error) {
             console.error('Erro ao atualizar pontuação:', error);
         }
     };
-    
+
     const handleExitGame = () => {
         navigate('/home');
     };
@@ -212,6 +244,7 @@ const StartGame = () => {
                     {bonusMessage}
                 </div>
             )}
+            <Feedback feedback={feedback} />
             <div className="card-container">
                 {questions.length > 0 && currentQuestionIndex >= 0 && currentQuestionIndex < questions.length && (
                     <TinderCard
