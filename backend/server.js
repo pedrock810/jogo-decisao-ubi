@@ -291,12 +291,21 @@ app.post('/user/recompensas', (req, res) => {
     });
 });
 
-app.get('/user/:userId/rewards', (req, res) => {
+// Rotas para lidar com as recompensas compradas pelos usuários
+app.get('/user/:userId/recompensas', (req, res) => {
     const userId = req.params.userId;
 
-    const sql = "SELECT r.nome, r.descricao, r.custo FROM recompensas r INNER JOIN recompensas_compradas rc ON r.id = rc.recompensa_id WHERE rc.user_id = ?";
+    const sql = `
+        SELECT r.*
+        FROM recompensas_compradas rc
+        JOIN recompensas r ON rc.recompensa_id = r.id
+        WHERE rc.user_id = ?
+    `;
     db.query(sql, [userId], (err, data) => {
-        if (err) return res.json(err);
+        if (err) {
+            console.error('Erro ao obter as recompensas do usuário:', err);
+            return res.status(500).json("Erro ao obter as recompensas do usuário");
+        }
         return res.json(data);
     });
 });
