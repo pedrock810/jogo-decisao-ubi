@@ -276,18 +276,32 @@ app.get('/ranking', (req, res) => {
     });
 });
 
-app.get('/user/recompensas', (req, res) => {
-    const userId = req.headers.userid;
+// Obter recompensas adquiridas pelo usuário
+app.get('/user/:userId/rewards', (req, res) => {
+    const userId = req.params.userId;
 
-    const sql = `
-        SELECT r.nome, r.descricao
-        FROM recompensas r
-        JOIN recompensas_adquiridas ra ON r.id = ra.recompensa_id
-        WHERE ra.user_id = ?
-    `;
+    const sql = "SELECT * FROM recompensas_usuario WHERE user_id = ?";
     db.query(sql, [userId], (err, data) => {
-        if (err) return res.json(err);
+        if (err) {
+            return res.json(err);
+        }
         return res.json(data);
+    });
+});
+
+// Adicione no servidor, após a compra bem-sucedida
+app.post('/user/:userId/rewards', (req, res) => {
+    const { recompensaId } = req.body;
+    const userId = req.params.userId;
+
+    const insertUserRewardQuery = "INSERT INTO recompensas_usuario (user_id, recompensa_id) VALUES (?, ?)";
+    const values = [userId, recompensaId];
+
+    db.query(insertUserRewardQuery, values, (err, data) => {
+        if (err) {
+            return res.json("Error");
+        }
+        return res.json("Success");
     });
 });
 
