@@ -276,6 +276,36 @@ app.get('/ranking', (req, res) => {
     });
 });
 
+app.post('/user/comprar-recompensa', (req, res) => {
+    const { userId, recompensaId } = req.body;
+
+    // Verificar se o usuário e a recompensa existem
+    const getUserQuery = "SELECT * FROM users WHERE id = ?";
+    db.query(getUserQuery, [userId], (err, userData) => {
+        if (err || userData.length === 0) {
+            return res.status(404).json("Usuário não encontrado");
+        }
+
+        const getRecompensaQuery = "SELECT * FROM recompensas WHERE id = ?";
+        db.query(getRecompensaQuery, [recompensaId], (err, recompensaData) => {
+            if (err || recompensaData.length === 0) {
+                return res.status(404).json("Recompensa não encontrada");
+            }
+
+            const insertCompraQuery = "INSERT INTO recompensas_compradas (user_id, recompensa_id) VALUES (?, ?)";
+            const values = [userId, recompensaId];
+
+            db.query(insertCompraQuery, values, (err, result) => {
+                if (err) {
+                    return res.status(500).json("Erro ao comprar a recompensa");
+                }
+                return res.json("Recompensa comprada com sucesso!");
+            });
+        });
+    });
+});
+
+
 const PORT = process.env.PORT || 3306;
 
 app.listen(PORT, () => {
