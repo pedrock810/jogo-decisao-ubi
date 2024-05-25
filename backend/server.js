@@ -291,6 +291,15 @@ app.post('/user/recompensas', (req, res) => {
     });
 });
 
+app.get('/user/:userId/rewards', (req, res) => {
+    const userId = req.params.userId;
+
+    const sql = "SELECT r.nome, r.descricao, r.custo FROM recompensas r INNER JOIN recompensas_compradas rc ON r.id = rc.recompensa_id WHERE rc.user_id = ?";
+    db.query(sql, [userId], (err, data) => {
+        if (err) return res.json(err);
+        return res.json(data);
+    });
+});
 
 const PORT = process.env.PORT || 3306;
 
