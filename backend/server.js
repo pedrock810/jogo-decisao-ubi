@@ -276,20 +276,6 @@ app.get('/ranking', (req, res) => {
     });
 });
 
-app.post('/user/rewards/acquired', (req, res) => {
-    const { userId, rewardId } = req.body;
-
-    const insertAcquiredRewardQuery = "INSERT INTO recompensas_adquiridas (user_id, reward_id) VALUES (?, ?)";
-    const values = [userId, rewardId];
-
-    db.query(insertAcquiredRewardQuery, values, (err, data) => {
-        if (err) {
-            return res.json("Error");
-        }
-        return res.json("Success");
-    });
-});
-
 const PORT = process.env.PORT || 3306;
 
 app.listen(PORT, () => {
