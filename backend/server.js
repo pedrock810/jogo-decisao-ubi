@@ -16,18 +16,6 @@ const db = mysql.createConnection({
     port: "3306"
 });
 
-// Adicione esta função no início do arquivo server.js, antes de qualquer rota
-function getCurrentDateTime() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hour = String(now.getHours()).padStart(2, '0');
-    const minute = String(now.getMinutes()).padStart(2, '0');
-    const second = String(now.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-}
-
 //REGISTRO E LOGIN
 app.post('/signup', (req, res) => {
     const { name, email, password } = req.body;
@@ -260,26 +248,16 @@ app.get('/user/pontuacao', (req, res) => {
 });
 
 app.put('/user/pontuacao', (req, res) => {
-    const { userId, pontuacao, rewardId } = req.body;
+    const { userId, pontuacao } = req.body;
 
     const sql = "UPDATE pontuacoes SET pontuacao = ? WHERE user_id = ?";
     const values = [pontuacao, userId];
 
-    db.query(sql, values, async (err, data) => {
+    db.query(sql, values, (err, data) => {
         if (err) {
             return res.json("Error");
         }
-        
-        // Se a atualização da pontuação for bem-sucedida, insira os dados na tabela recompensas_compradas
-        try {
-            const insertRewardPurchaseQuery = "INSERT INTO recompensas_compradas (user_id, recompensa_id, data_compra) VALUES (?, ?, ?)";
-            const datetime = getCurrentDateTime(); // Obtém a data e hora atuais
-            await db.query(insertRewardPurchaseQuery, [userId, rewardId, datetime]);
-            return res.json("Success");
-        } catch (error) {
-            console.error('Erro ao inserir dados na tabela recompensas_compradas:', error);
-            return res.json("Error");
-        }
+        return res.json("Success");
     });
 });
 
@@ -297,6 +275,22 @@ app.get('/ranking', (req, res) => {
         return res.json(data);
     });
 });
+
+// Rota para salvar uma recompensa comprada pelo usuário
+app.post('/user/recompensas', (req, res) => {
+    const { userId, recompensaId } = req.body;
+
+    const sql = "INSERT INTO recompensas_compradas (user_id, recompensa_id) VALUES (?, ?)";
+    const values = [userId, recompensaId];
+
+    db.query(sql, values, (err, data) => {
+        if (err) {
+            return res.json("Error");
+        }
+        return res.json("Success");
+    });
+});
+
 
 const PORT = process.env.PORT || 3306;
 
