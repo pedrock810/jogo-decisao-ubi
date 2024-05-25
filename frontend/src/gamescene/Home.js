@@ -1,9 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-function Home({ userName, setIsLoggedIn }) {
+function Home({ userName, setIsLoggedIn, userId }) {
     const navigate = useNavigate();
-    const userId = localStorage.getItem('userId');
 
     const handleLogout = () => {
         setIsLoggedIn(false);
@@ -22,6 +21,9 @@ function Home({ userName, setIsLoggedIn }) {
                 </Link>
                 <Link to="/rewards" state={{ userId: userId }}>
                     <button style={buttonStyle}>Recompensas</button>
+                </Link>
+                <Link to="/user-rewards"> {/* Link para UserRewards */}
+                    <button style={buttonStyle}>Suas Recompensas</button>
                 </Link>
                 <Link to="/tutorial">
                     <button style={buttonStyle}>Tutorial e Regras</button>
