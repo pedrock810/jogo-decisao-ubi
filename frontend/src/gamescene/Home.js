@@ -22,7 +22,7 @@ function Home({ userName, setIsLoggedIn, userId }) {
                 <Link to="/rewards" state={{ userId: userId }}>
                     <button style={buttonStyle}>Recompensas</button>
                 </Link>
-                <Link to="/user-rewards"> {/* Link para UserRewards */}
+                <Link to="/user-rewards"> 
                     <button style={buttonStyle}>Suas Recompensas</button>
                 </Link>
                 <Link to="/tutorial">

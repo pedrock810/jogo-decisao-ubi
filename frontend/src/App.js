@@ -13,7 +13,7 @@ import StartGame from "./gamescene/game/StartGame";
 import Ranking from "./gamescene/ranking/Ranking";
 import Rewards from './gamescene/rewards/Rewards';
 import Tutorial from "./gamescene/tutorial/Tutorial";
-import UserRewards from './gamescene/rewards/UserRewards'; // Importe o componente UserRewards
+import UserRewards from './gamescene/rewards/UserRewards'; 
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,7 +29,7 @@ function App() {
         {isLoggedIn && <Route path="/start-game" element={<StartGame />} />}
         {isLoggedIn && <Route path="/ranking" element={<Ranking />} />}
         {isLoggedIn && <Route path="/rewards" element={<Rewards />} />}
-        {isLoggedIn && <Route path="/user-rewards" element={<UserRewards userId={localStorage.getItem('userId')} />} />} {/* Adicione esta linha */}
+        {isLoggedIn && <Route path="/user-rewards" element={<UserRewards userId={localStorage.getItem('userId')} />} />} 
         {isLoggedIn && <Route path="/tutorial" element={<Tutorial />} />}
         {isLoggedIn && <Route path="/admin" element={<Admin setIsLoggedIn={setIsLoggedIn} />} />}
         {isLoggedIn && <Route path="/admin/users" element={<UsersManage setIsLoggedIn={setIsLoggedIn} />} />}
