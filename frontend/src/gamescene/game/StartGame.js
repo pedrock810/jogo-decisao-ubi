@@ -214,25 +214,31 @@ const StartGame = () => {
             }
             
             // Save local pontuacao
-            localStorage.setItem(`pontuacao_${userId}`, pontuacaoAtualizada);
+            localStorage.setItem(`pontuacao_${userId}`, JSON.stringify({
+                pendingPoints: (JSON.parse(localStorage.getItem(`pontuacao_${userId}`))?.pendingPoints || 0) + (pontuacaoAtualizada - pontuacao),
+                lastSynced: pontuacao
+            }));
             setPontuacao(pontuacaoAtualizada);
 
             // Try to sync with server
-            syncPontuacaoWithServer(pontuacaoAtualizada);
+            syncPontuacaoWithServer();
         } catch (error) {
             console.error('Erro ao atualizar pontuação:', error);
         }
     };
 
-    const syncPontuacaoWithServer = async (pontuacaoAtualizada) => {
+    const syncPontuacaoWithServer = async () => {
         try {
+            const storedData = JSON.parse(localStorage.getItem(`pontuacao_${userId}`));
+            if (!storedData || storedData.pendingPoints === 0) return;
+
             const response = await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
                 userId: userId,
-                pontuacao: pontuacaoAtualizada
+                pontuacao: storedData.lastSynced + storedData.pendingPoints
             });
-    
+
             const updatedPontuacao = Number(response.data);
-            setPontuacao(isNaN(updatedPontuacao) ? pontuacaoAtualizada : updatedPontuacao);
+            setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao);
             // Clear local storage after successful sync
             localStorage.removeItem(`pontuacao_${userId}`);
         } catch (error) {
@@ -242,10 +248,7 @@ const StartGame = () => {
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            const pontuacaoLocal = localStorage.getItem(`pontuacao_${userId}`);
-            if (pontuacaoLocal) {
-                syncPontuacaoWithServer(Number(pontuacaoLocal));
-            }
+            syncPontuacaoWithServer();
         }, 5000); // Attempt to sync every 5 seconds
         return () => clearInterval(intervalId);
     }, [userId]);
