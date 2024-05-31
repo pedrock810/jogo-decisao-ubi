@@ -18,8 +18,10 @@ function Pontuacao({ pontuacao }) {
 function Feedback({ feedback }) {
     if (!feedback) return null;
 
+    const isMobile = window.innerWidth <= 767;
+
     return (
-        <div className="feedback-message">
+        <div className={`feedback-message ${isMobile ? 'mobile' : ''}`}>
             <p>{feedback}</p>
         </div>
     );
