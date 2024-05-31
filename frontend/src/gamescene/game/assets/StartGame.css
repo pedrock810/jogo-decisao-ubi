@@ -149,4 +149,5 @@
   bottom: auto;
   left: 10px;
   right: auto;
+  width: calc(100% - 20px);
 }
