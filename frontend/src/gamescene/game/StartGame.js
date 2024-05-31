@@ -32,7 +32,6 @@ const StartGame = () => {
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [pontuacao, setPontuacao] = useState(0);
-    const [pendingPoints, setPendingPoints] = useState(0); // Novo estado para pontuação pendente
     const [respostaCorreta, setRespostaCorreta] = useState('');
     const [count, setCount] = useState(0);
     const [timerRunning, setTimerRunning] = useState(true);
@@ -41,7 +40,7 @@ const StartGame = () => {
     const [streak, setStreak] = useState(0);
     const [bonusMessage, setBonusMessage] = useState('');
     const [isSwipeDisabled, setIsSwipeDisabled] = useState(false);
-    const [feedback, setFeedback] = useState(''); 
+    const [feedback, setFeedback] = useState('');
 
     const bonusMessages = [
         "Bônus de 5 pontos! Excelente!",
@@ -73,11 +72,9 @@ const StartGame = () => {
             });
             const fetchedPontuacao = Number(response.data);
             setPontuacao(isNaN(fetchedPontuacao) ? 0 : fetchedPontuacao);
-            setPendingPoints(0); // Reset pending points ao buscar a pontuação
         } catch (error) {
             console.error('Error fetching pontuacao:', error);
             setPontuacao(0);
-            setPendingPoints(0); // Reset pending points ao buscar a pontuação
         }
     }, [userId]);
 
@@ -131,7 +128,7 @@ const StartGame = () => {
         console.log('Esquerda');
         if (respostaCorreta === 'Não') {
             playCorrectSound();
-            await atualizarPontuacaoLocal();
+            atualizarPontuacaoLocal();
             setStreak(prevStreak => prevStreak + 1);
             console.log('Streak:', streak + 1);
             setFeedback('Resposta correta!');
@@ -166,7 +163,7 @@ const StartGame = () => {
         console.log('Direita');
         if (respostaCorreta === 'Sim') {
             playCorrectSound();
-            await atualizarPontuacaoLocal();
+            atualizarPontuacaoLocal();
             setStreak(prevStreak => prevStreak + 1);
             console.log('Streak:', streak + 1);
             setFeedback('Resposta correta!');
@@ -197,38 +194,35 @@ const StartGame = () => {
         setTimeout(() => setFeedback(''), 3000);
     };
 
-    const atualizarPontuacaoLocal = async () => {
-        try {
-            let pontuacaoAtualizada = pontuacao;
-            const perguntaAtual = questions[currentQuestionIndex];
-            
-            if (count <= 10) { 
-                pontuacaoAtualizada += perguntaAtual.pontuacao;
-            } else if (count <= 15) { 
-                pontuacaoAtualizada += (perguntaAtual.pontuacao - 3);
-            } else { 
-                pontuacaoAtualizada += (perguntaAtual.pontuacao - 5);
-            }
-    
-            if (streak > 0 && streak % 4 === 0) {
-                pontuacaoAtualizada += 4; 
-                const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
-                setBonusMessage(randomMessage);
-            }
-            
-            // Update local pontuacao immediately
-            setPontuacao(pontuacaoAtualizada);
-            setPendingPoints(prev => prev + (pontuacaoAtualizada - pontuacao));
-            localStorage.setItem(`pontuacao_${userId}`, JSON.stringify({
-                pendingPoints: (JSON.parse(localStorage.getItem(`pontuacao_${userId}`))?.pendingPoints || 0) + (pontuacaoAtualizada - pontuacao),
-                lastSynced: pontuacaoAtualizada
-            }));
-
-            // Try to sync with server
-            syncPontuacaoWithServer();
-        } catch (error) {
-            console.error('Erro ao atualizar pontuação:', error);
+    const atualizarPontuacaoLocal = () => {
+        let pontuacaoAtualizada = pontuacao;
+        const perguntaAtual = questions[currentQuestionIndex];
+        
+        if (count <= 10) { 
+            pontuacaoAtualizada += perguntaAtual.pontuacao;
+        } else if (count <= 15) { 
+            pontuacaoAtualizada += (perguntaAtual.pontuacao - 3);
+        } else { 
+            pontuacaoAtualizada += (perguntaAtual.pontuacao - 5);
         }
+
+        if (streak > 0 && streak % 4 === 0) {
+            pontuacaoAtualizada += 4; 
+            const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
+            setBonusMessage(randomMessage);
+        }
+
+        // Atualiza a pontuação local imediatamente
+        setPontuacao(pontuacaoAtualizada);
+
+        // Armazena a pontuação no localStorage para posterior sincronização
+        localStorage.setItem(`pontuacao_${userId}`, JSON.stringify({
+            pendingPoints: (JSON.parse(localStorage.getItem(`pontuacao_${userId}`))?.pendingPoints || 0) + (pontuacaoAtualizada - pontuacao),
+            lastSynced: pontuacaoAtualizada
+        }));
+
+        // Sincroniza a pontuação com o servidor
+        syncPontuacaoWithServer();
     };
 
     const syncPontuacaoWithServer = async () => {
@@ -243,7 +237,6 @@ const StartGame = () => {
 
             const updatedPontuacao = Number(response.data);
             setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao);
-            setPendingPoints(0);
             localStorage.setItem(`pontuacao_${userId}`, JSON.stringify({
                 pendingPoints: 0,
                 lastSynced: updatedPontuacao
