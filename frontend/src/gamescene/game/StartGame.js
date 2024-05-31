@@ -32,6 +32,7 @@ const StartGame = () => {
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [pontuacao, setPontuacao] = useState(0);
+    const [pendingPoints, setPendingPoints] = useState(0); // Novo estado para pontuação pendente
     const [respostaCorreta, setRespostaCorreta] = useState('');
     const [count, setCount] = useState(0);
     const [timerRunning, setTimerRunning] = useState(true);
@@ -72,9 +73,11 @@ const StartGame = () => {
             });
             const fetchedPontuacao = Number(response.data);
             setPontuacao(isNaN(fetchedPontuacao) ? 0 : fetchedPontuacao);
+            setPendingPoints(0); // Reset pending points ao buscar a pontuação
         } catch (error) {
             console.error('Error fetching pontuacao:', error);
             setPontuacao(0);
+            setPendingPoints(0); // Reset pending points ao buscar a pontuação
         }
     }, [userId]);
 
@@ -213,12 +216,13 @@ const StartGame = () => {
                 setBonusMessage(randomMessage);
             }
             
-            // Save local pontuacao
+            // Update local pontuacao immediately
+            setPontuacao(pontuacaoAtualizada);
+            setPendingPoints(prev => prev + (pontuacaoAtualizada - pontuacao));
             localStorage.setItem(`pontuacao_${userId}`, JSON.stringify({
                 pendingPoints: (JSON.parse(localStorage.getItem(`pontuacao_${userId}`))?.pendingPoints || 0) + (pontuacaoAtualizada - pontuacao),
-                lastSynced: pontuacao
+                lastSynced: pontuacaoAtualizada
             }));
-            setPontuacao(pontuacaoAtualizada);
 
             // Try to sync with server
             syncPontuacaoWithServer();
@@ -234,13 +238,16 @@ const StartGame = () => {
 
             const response = await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
                 userId: userId,
-                pontuacao: storedData.lastSynced + storedData.pendingPoints
+                pontuacao: storedData.lastSynced
             });
 
             const updatedPontuacao = Number(response.data);
             setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao);
-            // Clear local storage after successful sync
-            localStorage.removeItem(`pontuacao_${userId}`);
+            setPendingPoints(0);
+            localStorage.setItem(`pontuacao_${userId}`, JSON.stringify({
+                pendingPoints: 0,
+                lastSynced: updatedPontuacao
+            }));
         } catch (error) {
             console.error('Erro ao sincronizar pontuação com o servidor:', error);
         }
