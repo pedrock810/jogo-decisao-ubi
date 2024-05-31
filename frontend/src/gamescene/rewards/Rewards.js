@@ -21,7 +21,6 @@ function Rewards() {
     const fetchPontuacao = useCallback(async () => {
         try {
             const response = await axios.get('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
-            //const response = await axios.get('http://localhost:3306/user/pontuacao', {
                 headers: {
                     userid: userId
                 }
@@ -37,7 +36,6 @@ function Rewards() {
             await fetchPontuacao();
             try {
                 const response = await axios.get('https://jogo-decisao-backend.onrender.com/admin/rewards');
-                //const response = await axios.get('http://localhost:3306/admin/rewards');
                 setRewards(response.data);
             } catch (error) {
                 console.error('Erro ao obter as recompensas:', error);
@@ -50,16 +48,13 @@ function Rewards() {
         if (pontuacao >= reward.custo) {
             try {
                 const updatedPontuacao = pontuacao - reward.custo;
-                await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
-                //await axios.put('http://localhost:3306/user/pontuacao', {    
+                await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {   
                     userId: userId,
                     pontuacao: updatedPontuacao
                 });
                 setPontuacao(updatedPontuacao);
     
-                // Adiciona a recompensa comprada à tabela recompensas_compradas
-                await axios.post('https://jogo-decisao-backend.onrender.com/user/recompensas', {
-                //await axios.post('http://localhost:3306/user/recompensas', {    
+                await axios.post('https://jogo-decisao-backend.onrender.com/user/recompensas', {  
                     userId: userId,
                     recompensaId: reward.id
                 });
@@ -79,10 +74,10 @@ function Rewards() {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: "50px", textAlign: "center" }}>
             <Pontuacao pontuacao={pontuacao} />
             <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair do Jogo</button>
-            <h2 style={{ textAlign: 'center' }}>Recompensas Disponíveis</h2>
+            <h1 style={{ textAlign: 'center' }}>Recompensas Disponíveis</h1>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {rewards.map(reward => (
                     <div key={reward.id} style={cardStyle}>

@@ -26,9 +26,9 @@ function UserRewards({ userId }) {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{ padding: "50px", textAlign: "center" }}>
             <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair do Jogo</button>
-            <h2 style={{ textAlign: 'center' }}>Suas Recompensas Compradas</h2>
+            <h1 style={{ textAlign: 'center' }}>Suas Recompensas Compradas</h1>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {userRewards.map(reward => (
                     <div key={reward.id} style={cardStyle}>
