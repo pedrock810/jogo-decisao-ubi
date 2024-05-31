@@ -31,7 +31,10 @@ const StartGame = () => {
     const userId = location.state.userId;
     const [questions, setQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [pontuacao, setPontuacao] = useState(0);
+    const [pontuacao, setPontuacao] = useState(() => {
+        const savedPontuacao = localStorage.getItem('pontuacao');
+        return savedPontuacao ? Number(savedPontuacao) : 0;
+    });
     const [respostaCorreta, setRespostaCorreta] = useState('');
     const [count, setCount] = useState(0);
     const [timerRunning, setTimerRunning] = useState(true);
@@ -40,7 +43,7 @@ const StartGame = () => {
     const [streak, setStreak] = useState(0);
     const [bonusMessage, setBonusMessage] = useState('');
     const [isSwipeDisabled, setIsSwipeDisabled] = useState(false);
-    const [feedback, setFeedback] = useState('');
+    const [feedback, setFeedback] = useState(''); 
 
     const bonusMessages = [
         "Bônus de 5 pontos! Excelente!",
@@ -72,9 +75,9 @@ const StartGame = () => {
             });
             const fetchedPontuacao = Number(response.data);
             setPontuacao(isNaN(fetchedPontuacao) ? 0 : fetchedPontuacao);
+            localStorage.setItem('pontuacao', fetchedPontuacao);
         } catch (error) {
             console.error('Error fetching pontuacao:', error);
-            setPontuacao(0);
         }
     }, [userId]);
 
@@ -112,6 +115,29 @@ const StartGame = () => {
         }
     }, [currentQuestionIndex, questions]);
 
+    useEffect(() => {
+        window.addEventListener('online', syncPontuacao);
+        return () => {
+            window.removeEventListener('online', syncPontuacao);
+        };
+    }, []);
+
+    const syncPontuacao = async () => {
+        const localPontuacao = localStorage.getItem('pontuacao');
+        if (localPontuacao) {
+            try {
+                const response = await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
+                    userId: userId,
+                    pontuacao: Number(localPontuacao)
+                });
+                const updatedPontuacao = Number(response.data);
+                setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao);
+            } catch (error) {
+                console.error('Erro ao sincronizar pontuação:', error);
+            }
+        }
+    };
+
     const playCorrectSound = () => {
         const audio = new Audio(correctSound);
         audio.play();
@@ -128,7 +154,7 @@ const StartGame = () => {
         console.log('Esquerda');
         if (respostaCorreta === 'Não') {
             playCorrectSound();
-            atualizarPontuacaoLocal();
+            await atualizarPontuacao();
             setStreak(prevStreak => prevStreak + 1);
             console.log('Streak:', streak + 1);
             setFeedback('Resposta correta!');
@@ -163,7 +189,7 @@ const StartGame = () => {
         console.log('Direita');
         if (respostaCorreta === 'Sim') {
             playCorrectSound();
-            atualizarPontuacaoLocal();
+            await atualizarPontuacao();
             setStreak(prevStreak => prevStreak + 1);
             console.log('Streak:', streak + 1);
             setFeedback('Resposta correta!');
@@ -194,64 +220,41 @@ const StartGame = () => {
         setTimeout(() => setFeedback(''), 3000);
     };
 
-    const atualizarPontuacaoLocal = () => {
-        let pontuacaoAtualizada = pontuacao;
-        const perguntaAtual = questions[currentQuestionIndex];
-        
-        if (count <= 10) { 
-            pontuacaoAtualizada += perguntaAtual.pontuacao;
-        } else if (count <= 15) { 
-            pontuacaoAtualizada += (perguntaAtual.pontuacao - 3);
-        } else { 
-            pontuacaoAtualizada += (perguntaAtual.pontuacao - 5);
-        }
-
-        if (streak > 0 && streak % 4 === 0) {
-            pontuacaoAtualizada += 4; 
-            const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
-            setBonusMessage(randomMessage);
-        }
-
-        // Atualiza a pontuação local imediatamente
-        setPontuacao(pontuacaoAtualizada);
-
-        // Armazena a pontuação no localStorage para posterior sincronização
-        localStorage.setItem(`pontuacao_${userId}`, JSON.stringify({
-            pendingPoints: (JSON.parse(localStorage.getItem(`pontuacao_${userId}`))?.pendingPoints || 0) + (pontuacaoAtualizada - pontuacao),
-            lastSynced: pontuacaoAtualizada
-        }));
-
-        // Sincroniza a pontuação com o servidor
-        syncPontuacaoWithServer();
-    };
-
-    const syncPontuacaoWithServer = async () => {
+    const atualizarPontuacao = async () => {
         try {
-            const storedData = JSON.parse(localStorage.getItem(`pontuacao_${userId}`));
-            if (!storedData || storedData.pendingPoints === 0) return;
+            let pontuacaoAtualizada = pontuacao;
+            const perguntaAtual = questions[currentQuestionIndex];
+            
+            if (count <= 10) { 
+                pontuacaoAtualizada += perguntaAtual.pontuacao;
+            } else if (count <= 15) { 
+                pontuacaoAtualizada += (perguntaAtual.pontuacao - 3);
+            } else { 
+                pontuacaoAtualizada += (perguntaAtual.pontuacao - 5);
+            }
+    
+            if (streak > 0 && streak % 4 === 0) {
+                pontuacaoAtualizada += 4; 
+                const randomMessage = bonusMessages[Math.floor(Math.random() * bonusMessages.length)];
+                setBonusMessage(randomMessage);
+            }
 
-            const response = await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
-                userId: userId,
-                pontuacao: storedData.lastSynced
-            });
+            localStorage.setItem('pontuacao', pontuacaoAtualizada);
+            setPontuacao(pontuacaoAtualizada);
+            
+            if (navigator.onLine) {
+                const response = await axios.put('https://jogo-decisao-backend.onrender.com/user/pontuacao', {
+                    userId: userId,
+                    pontuacao: pontuacaoAtualizada
+                });
 
-            const updatedPontuacao = Number(response.data);
-            setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao);
-            localStorage.setItem(`pontuacao_${userId}`, JSON.stringify({
-                pendingPoints: 0,
-                lastSynced: updatedPontuacao
-            }));
+                const updatedPontuacao = Number(response.data);
+                setPontuacao(isNaN(updatedPontuacao) ? pontuacao : updatedPontuacao);
+            }
         } catch (error) {
-            console.error('Erro ao sincronizar pontuação com o servidor:', error);
+            console.error('Erro ao atualizar pontuação:', error);
         }
     };
-
-    useEffect(() => {
-        const intervalId = setInterval(() => {
-            syncPontuacaoWithServer();
-        }, 5000); // Attempt to sync every 5 seconds
-        return () => clearInterval(intervalId);
-    }, [userId]);
 
     const handleExitGame = () => {
         navigate('/home');
