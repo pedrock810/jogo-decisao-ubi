@@ -105,7 +105,8 @@
   z-index: 9999;
   font-size: 16px;
   font-weight: bold;
-  transition: opacity 0.3s ease;
+  max-width: 80%; /* Define a largura máxima */
+  word-wrap: break-word; /* Faz a quebra de linha para textos longos */
 }
 
 @media only screen and (min-width: 768px) {
@@ -135,16 +136,14 @@
   }
 
   .feedback-message {
-    bottom: 20px;
-    width: 90%;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 10px;
+    left: 10px;
+    bottom: auto; /* Remove o valor inferior */
+    width: auto; /* Ajusta a largura automaticamente */
+    max-width: 90%; /* Define a largura máxima */
     font-size: 14px; 
     padding: 8px;
+    transform: none; /* Remove a centralização horizontal */
+    word-wrap: break-word; /* Faz a quebra de linha para textos longos */
   }
-}
-
-.feedback-message.mobile {
-  top: 10px;
-  right: 110px;
 }
