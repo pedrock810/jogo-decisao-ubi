@@ -19,7 +19,7 @@ const Tutorial = () => {
             <ol className="tutorial-steps">
                 <li>Ao iniciar o jogo, você verá uma pergunta no cartão central.</li>
                 <li>Para responder a pergunta, deslize o cartão para a esquerda se a resposta for "Não" ou para a direita se a resposta for "Sim".</li>
-                <li>Você pode usar os botões de seta na tela ou simplesmente deslizar o cartão com o dedo (em dispositivos móveis) ou o mouse.</li>
+                <li>Você pode usar os botões de seta na tela ou simplesmente deslizar o cartão com o dedo (em dispositivos móveis) ou o rato.</li>
                 <li>A cada resposta correta, sua pontuação será atualizada. A pontuação depende do tempo que você levou para responder:</li>
                 <ul>
                     <li>Respostas em até 10 segundos: pontuação completa.</li>
@@ -31,7 +31,7 @@ const Tutorial = () => {
                     <li>A cada 5 respostas corretas consecutivas, você ganha um bônus de 5 pontos!</li>
                 </ul>
                 <li>Você pode sair do jogo a qualquer momento clicando no botão "Sair do Jogo" no canto superior esquerdo.</li>
-                <li>Ao final do jogo, você pode trocar seus pontos por recompensas da Universidade da Beira Interior.</li>
+                <li>Ao final do jogo, você pode trocar seus pontos por recompensas físicas da Universidade da Beira Interior.</li>
                 <li>Divirta-se e boa sorte!</li>
             </ol>
         </div>
