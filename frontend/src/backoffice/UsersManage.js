@@ -26,7 +26,6 @@ function UsersManage({ setIsLoggedIn }) {
 
     useEffect(() => {
         fetch('https://jogo-decisao-backend.onrender.com/admin/users')
-        //fetch('http://localhost:3306/admin/users')
             .then(res => res.json())
             .then(data => setData(data))
             .catch(err => console.log(err));
@@ -53,7 +52,6 @@ function UsersManage({ setIsLoggedIn }) {
     const handleSave = (event) => {
         event.preventDefault();
         axios.put(`https://jogo-decisao-backend.onrender.com/admin/users/${editedUserInfo.id}`, editedUserInfo)
-        //axios.put(`http://localhost:3306/admin/users/${editedUserInfo.id}`, editedUserInfo)
             .then(res => {
                 if (res.data === "Success") {
                     const updatedData = data.map(user => {
@@ -100,7 +98,6 @@ function UsersManage({ setIsLoggedIn }) {
 
     const confirmDeleteUser = () => {
         axios.delete(`https://jogo-decisao-backend.onrender.com/admin/users/${userIdToDelete}`)
-        //axios.delete(`http://localhost:3306/admin/users/${userIdToDelete}`)
             .then(res => {
                 if (res.data === "Success") {
                     const updatedData = data.filter(user => user.id !== userIdToDelete);
@@ -127,15 +124,15 @@ function UsersManage({ setIsLoggedIn }) {
                 <h2>Admin Menu</h2>
                 <ul>
                     <li><Link to="/admin">Página Inicial</Link></li>
-                    <li><Link to="/admin/users">Gerenciar Usuários</Link></li>
+                    <li><Link to="/admin/users">Gerenciar Utilizadores</Link></li>
                     <li><Link to="/admin/answers">Gerenciar Perguntas</Link></li>
                     <li><Link to="/admin/rewards">Gerenciar Recompensas</Link></li>
                     <li><button className="logout-btn" onClick={handleLogout}>Sair</button></li>
                 </ul>
             </div>
             <div className="content">
-                <h1>Gerenciar Usuários</h1>
-                <p>Para a segurança de todos os usuários, as senhas estão cifradas.</p>
+                <h1>Gerenciar Utilizadores</h1>
+                <p>Para a segurança de todos os utilizadores, as senhas estão cifradas.</p>
                 <table>
                     <thead>
                         <tr>
@@ -170,7 +167,7 @@ function UsersManage({ setIsLoggedIn }) {
                 >
                     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
                         <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Editar Usuário
+                            Editar Utilizador
                         </Typography>
                         <form onSubmit={handleSave}>
                             <div>
@@ -198,10 +195,10 @@ function UsersManage({ setIsLoggedIn }) {
                 >
                     <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
                         <Typography id="modal-modal-title" variant="h6" component="h2">
-                            Confirmar exclusão de usuário
+                            Confirmar exclusão de utilizador
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            Tem certeza de que deseja excluir este usuário?
+                            Tem certeza de que deseja excluir este utilizador?
                         </Typography>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
                             <Button onClick={() => setOpenDeleteModal(false)}>Cancelar</Button>

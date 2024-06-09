@@ -68,8 +68,8 @@ const buttonStyle = {
 
 const verticalButtonStyle = {
     ...buttonStyle,
-    display: 'block',
-    width: '200px',
+    display: 'block',   
+    width: '300px',
 };
 
 const logoutButtonStyle = {
@@ -89,7 +89,7 @@ const logoutButtonStyle = {
 const verticalLogoutButtonStyle = {
     ...logoutButtonStyle,
     display: 'block',
-    width: '200px',
+    width: '300px',
     marginTop: "10px"
 };
 

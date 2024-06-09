@@ -35,7 +35,6 @@ function AnswersManage({ setIsLoggedIn }) {
 
     useEffect(() => {
         fetch('https://jogo-decisao-backend.onrender.com/admin/perguntas')
-        //fetch('http://localhost:3306/admin/perguntas')
             .then(res => res.json())
             .then(data => setData(data))
             .catch(err => console.log(err));
@@ -62,10 +61,9 @@ function AnswersManage({ setIsLoggedIn }) {
         }
     
         axios.post('https://jogo-decisao-backend.onrender.com/admin/perguntas', newQuestionInfo)
-        //axios.post('http://localhost:3306/admin/perguntas', newQuestionInfo)
             .then(res => {
                 if (res.data === "Success") {
-                    fetch('http://localhost:3306/admin/perguntas')
+                    fetch('https://jogo-decisao-backend.onrender.com/admin/perguntas')
                         .then(res => res.json())
                         .then(data => setData(data))
                         .catch(err => console.log(err));
@@ -103,7 +101,6 @@ function AnswersManage({ setIsLoggedIn }) {
         }
 
         axios.put(`https://jogo-decisao-backend.onrender.com/admin/perguntas/${editedQuestionInfo.id}`, editedQuestionInfo)
-        //axios.put(`http://localhost:3306/admin/perguntas/${editedQuestionInfo.id}`, editedQuestionInfo)
             .then(res => {
                 if (res.data === "Success") {
                     const updatedData = data.map(question => {
@@ -142,7 +139,6 @@ function AnswersManage({ setIsLoggedIn }) {
 
     const confirmDeleteQuestion = () => {
         axios.delete(`https://jogo-decisao-backend.onrender.com/admin/perguntas/${questionIdToDelete}`)
-        //axios.delete(`http://localhost:3306/admin/perguntas/${questionIdToDelete}`)
             .then(res => {
                 if (res.data === "Success") {
                     const updatedData = data.filter(question => question.id !== questionIdToDelete);
@@ -168,7 +164,7 @@ function AnswersManage({ setIsLoggedIn }) {
                 <h2>Admin Menu</h2>
                 <ul>
                     <li><Link to="/admin">Página Inicial</Link></li>
-                    <li><Link to="/admin/users">Gerenciar Usuários</Link></li>
+                    <li><Link to="/admin/users">Gerenciar Utilizadores</Link></li>
                     <li><Link to="/admin/answers">Gerenciar Perguntas</Link></li>
                     <li><Link to="/admin/rewards">Gerenciar Recompensas</Link></li>
                     <li><button className="logout-btn" onClick={handleLogout}>Sair</button></li>

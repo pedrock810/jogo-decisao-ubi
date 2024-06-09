@@ -36,7 +36,6 @@ function RewardsManage({ setIsLoggedIn }) {
 
     const fetchRewards = () => {
         fetch('https://jogo-decisao-backend.onrender.com/admin/rewards')
-        //fetch('http://localhost:3306/admin/rewards')
             .then(res => res.json())
             .then(data => setData(data))
             .catch(err => console.log(err));
@@ -55,7 +54,6 @@ function RewardsManage({ setIsLoggedIn }) {
         }
 
         axios.post('https://jogo-decisao-backend.onrender.com/admin/rewards', newRewardInfo)
-        //axios.post('http://localhost:3306/admin/rewards', newRewardInfo)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();
@@ -81,7 +79,6 @@ function RewardsManage({ setIsLoggedIn }) {
     const handleSaveEditReward = (event) => {
         event.preventDefault();
         axios.put(`https://jogo-decisao-backend.onrender.com/admin/rewards/${editedRewardInfo.id}`, editedRewardInfo)
-        //axios.put(`http://localhost:3306/admin/rewards/${editedRewardInfo.id}`, editedRewardInfo)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();
@@ -101,7 +98,6 @@ function RewardsManage({ setIsLoggedIn }) {
 
     const confirmDeleteReward = () => {
         axios.delete(`https://jogo-decisao-backend.onrender.com/admin/rewards/${rewardIdToDelete}`)
-        //axios.delete(`http://localhost:3306/admin/rewards/${rewardIdToDelete}`)
             .then(res => {
                 if (res.data === "Success") {
                     fetchRewards();
@@ -132,7 +128,7 @@ function RewardsManage({ setIsLoggedIn }) {
                 <h2>Admin Menu</h2>
                 <ul>
                     <li><Link to="/admin">Página Inicial</Link></li>
-                    <li><Link to="/admin/users">Gerenciar Usuários</Link></li>
+                    <li><Link to="/admin/users">Gerenciar Utilizadores</Link></li>
                     <li><Link to="/admin/answers">Gerenciar Perguntas</Link></li>
                     <li><Link to="/admin/rewards">Gerenciar Recompensas</Link></li>
                     <li><button className="logout-btn" onClick={handleLogout}>Sair</button></li>

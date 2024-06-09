@@ -269,7 +269,7 @@ const StartGame = () => {
     });
 
     return (
-        <div {...handlers} style={{ position: 'relative', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div {...handlers} style={{ position: 'relative', minHeight: '100vh', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Pontuacao pontuacao={pontuacao} />
             <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair da Partida</button>
             {bonusMessage && (
