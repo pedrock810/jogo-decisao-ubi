@@ -1,9 +1,8 @@
-/* Estilos gerais */
 .card-container {
-  width: 90%; /* Ajuste a largura para 100% para responsividade */
-  max-width: 400px; /* Limite a largura máxima para manter a estrutura */
+  width: 90%; 
+  max-width: 400px; 
   position: relative;
-  margin: 0 auto; /* Centralize o contêiner */
+  margin: 0 auto; 
 }
 
 .card {
@@ -121,6 +120,47 @@
     justify-content: space-between;
     margin-top: 20px;
     z-index: 999; 
+  }
+}
+
+@media only screen and (max-width: 1024px) and (orientation: portrait), 
+       only screen and (max-width: 1366px) and (orientation: portrait) {
+  .card {
+    height: 70vh !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    margin-bottom: 30px;
+    width: 120%; 
+    max-width: 600px;
+  }
+
+  .card h2 {
+    font-size: 28px; 
+    margin-bottom: 15px;
+    text-align: center; 
+  }
+
+  .feedback-message {
+    top: 10px;
+    left: 10px;
+    bottom: auto; 
+    width: auto; 
+    max-width: 90%; 
+    font-size: 14px; 
+    padding: 8px;
+    transform: none; 
+    word-wrap: break-word; 
+  }
+
+  .arrows {
+    display: none; 
+  }
+
+  .exit-button {
+    display: none; 
   }
 }
 
