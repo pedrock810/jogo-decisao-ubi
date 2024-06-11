@@ -53,13 +53,11 @@ function Rewards() {
                     pontuacao: updatedPontuacao
                 });
                 setPontuacao(updatedPontuacao);
-        
-                const recompensaResponse = await axios.post('https://jogo-decisao-backend.onrender.com/user/recompensas', {  
+    
+                await axios.post('https://jogo-decisao-backend.onrender.com/user/recompensas', {  
                     userId: userId,
                     recompensaId: reward.id
                 });
-                
-                console.log('Recompensa comprada:', recompensaResponse.data);  // Adicione este log para verificar a resposta
     
                 toast.success(`Recompensa "${reward.nome}" comprada com sucesso!`);
             } catch (error) {
@@ -69,7 +67,7 @@ function Rewards() {
         } else {
             toast.error('Você não possui pontuação suficiente para comprar esta recompensa.');
         }
-    };     
+    };    
 
     const handleExitGame = () => {
         navigate('/home');
