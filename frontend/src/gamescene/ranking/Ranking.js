@@ -25,7 +25,7 @@ function Ranking() {
 
     return (
         <div style={{ padding: "50px", textAlign: "center" }}>
-        <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair do Jogo</button>
+        <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Voltar</button>
 
             <h1>Ranking dos Jogadores</h1>
             <div style={{ marginTop: "20px" }}>

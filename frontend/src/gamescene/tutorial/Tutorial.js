@@ -13,7 +13,7 @@ const Tutorial = () => {
 
     return (
         <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', padding: "50px" }}>
-            <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair do Jogo</button>
+            <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Voltar</button>
             <h1>Tutorial</h1>
             <p>Bem-vindo ao tutorial do Jogo de Decisão da Universidade da Beira Interior!</p>
             <ol className="tutorial-steps">

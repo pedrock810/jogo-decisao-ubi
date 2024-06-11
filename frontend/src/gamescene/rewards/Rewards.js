@@ -76,7 +76,7 @@ function Rewards() {
     return (
         <div style={{ padding: "50px", textAlign: "center" }}>
             <Pontuacao pontuacao={pontuacao} />
-            <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Sair do Jogo</button>
+            <button className="exit-button" onClick={handleExitGame} style={{ position: 'absolute', top: '10px', left: '10px' }}>Voltar</button>
             <h1 style={{ textAlign: 'center' }}>Recompensas Disponíveis</h1>
             <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {rewards.map(reward => (
