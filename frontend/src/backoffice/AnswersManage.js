@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './style/Admin.css';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -10,8 +10,7 @@ import Typography from '@mui/material/Typography';
 
 function AnswersManage({ setIsLoggedIn }) {
     const [data, setData] = useState([]);
-     // eslint-disable-next-line
-    const [editingQuestion, setEditingQuestion] = useState(null);
+    const [editingQuestion, setEditingQuestion] = useState(null); // eslint-disable-line
     const [editedQuestionInfo, setEditedQuestionInfo] = useState({
         id: '',
         pergunta: '',
@@ -33,14 +32,16 @@ function AnswersManage({ setIsLoggedIn }) {
 
     const [menuOpen, setMenuOpen] = useState(false);
 
+    const sidebarRef = useRef(null);
+    const navigate = useNavigate();
+    const location = useLocation();
+
     useEffect(() => {
         fetch('https://jogo-decisao-backend.onrender.com/admin/perguntas')
             .then(res => res.json())
             .then(data => setData(data))
             .catch(err => console.log(err));
     }, []);
-
-    const navigate = useNavigate();
 
     const handleOpenCreateModal = () => {
         setNewQuestionInfo({
@@ -155,12 +156,39 @@ function AnswersManage({ setIsLoggedIn }) {
         setMenuOpen(!menuOpen);
     };
 
+    const closeMenu = () => {
+        setMenuOpen(false);
+    };
+
+    const handleOutsideClick = (event) => {
+        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+            closeMenu();
+        }
+    };
+
+    useEffect(() => {
+        if (menuOpen) {
+            document.addEventListener('mousedown', handleOutsideClick);
+        } else {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, [menuOpen]);
+
+    useEffect(() => {
+        closeMenu();
+    }, [location]);
+
     return (
         <div className="admin-container">
             <button className="menu-toggle" onClick={toggleMenu}>
                 <span className="menu-icon"></span>
+                <span className="menu-icon"></span>
+                <span className="menu-icon"></span>
             </button>
-            <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
+            <div className={`sidebar ${menuOpen ? 'open' : ''}`} ref={sidebarRef}>
                 <h2>Admin Menu</h2>
                 <ul>
                     <li><Link to="/admin">Página Inicial</Link></li>

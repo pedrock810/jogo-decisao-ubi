@@ -80,7 +80,7 @@ tr:hover {
 }
 
 .edit-btn, .delete-btn {
-    background-color: #4CAF50; /* Verde */
+    background-color: #4CAF50; 
     border: none;
     color: white;
     padding: 8px 16px;
@@ -94,7 +94,7 @@ tr:hover {
 }
 
 .create-btn {
-    background-color: black; /* Verde */
+    background-color: black; 
     border: none;
     color: white;
     padding: 8px 16px;
@@ -108,21 +108,20 @@ tr:hover {
 }
 
 .edit-btn:hover, .delete-btn:hover {
-    background-color: #45a049; /* Verde mais escuro */
+    background-color: #45a049; 
 }
 
 .delete-btn {
-    background-color: #f44336; /* Vermelho */
+    background-color: #f44336; 
 }
 
 .delete-btn:hover {
-    background-color: #df1515; /* Vermelho mais escuro */
+    background-color: #df1515; 
 }
 
-/* Adicione estas regras de mídia para telas de celular */
 @media (max-width: 768px) {
     .sidebar {
-        display: none; /* Inicialmente oculto */
+        display: none; 
         position: fixed;
         top: 0;
         left: 0;
@@ -130,21 +129,29 @@ tr:hover {
         width: 250px;
         background-color: #333;
         padding-top: 20px;
-        z-index: 1000; /* Garante que o menu esteja na frente do conteúdo */
+        z-index: 1000; 
     }
 
     .sidebar.open {
-        display: block; /* Mostra o menu quando a classe open é aplicada */
+        display: block; 
     }
 
     .menu-toggle {
         position: fixed;
         top: 20px;
         left: 20px;
-        z-index: 1100; /* Garante que o botão do menu esteja na frente do menu */
+        z-index: 1100; 
         background: none;
         border: none;
         cursor: pointer;
+    }
+
+    .menu-toggle:nth-of-type(2) {
+        top: 30px;
+    }
+
+    .menu-toggle:nth-of-type(3) {
+        top: 40px;
     }
 
     .menu-icon {
@@ -155,19 +162,17 @@ tr:hover {
         margin-bottom: 5px;
     }
 
-    /* Ajustes para o conteúdo principal */
     .content {
-        margin-left: 0; /* Remova a margem esquerda para preencher a tela inteira */
-        padding: 20px;
+        margin-left: 0; 
+        padding: 43px;
         margin-right: 20px;
     }
 
     h1, p {
-        text-align: center; /* Centralize o texto */
+        text-align: center; 
     }
 
-    /* Ajuste de tamanho para o botão de logout */
     .logout-btn {
-        width: 100%; /* Ocupa a largura total */
+        width: 100%; 
     }
 }

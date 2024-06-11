@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './style/Admin.css';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -16,8 +16,7 @@ function RewardsManage({ setIsLoggedIn }) {
         custo: '',
         descricao: ''
     });
-     // eslint-disable-next-line
-    const [editingReward, setEditingReward] = useState(null);
+    const [editingReward, setEditingReward] = useState(null); // eslint-disable-line
     const [editedRewardInfo, setEditedRewardInfo] = useState({
         id: '',
         nome: '',
@@ -27,8 +26,11 @@ function RewardsManage({ setIsLoggedIn }) {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [rewardIdToDelete, setRewardIdToDelete] = useState(null);
-    const [menuOpen, setMenuOpen] = useState(false); 
+    const [menuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const sidebarRef = useRef(null);
 
     useEffect(() => {
         fetchRewards();
@@ -119,12 +121,39 @@ function RewardsManage({ setIsLoggedIn }) {
         setMenuOpen(!menuOpen);
     };
 
+    const closeMenu = () => {
+        setMenuOpen(false);
+    };
+
+    const handleOutsideClick = (event) => {
+        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+            closeMenu();
+        }
+    };
+
+    useEffect(() => {
+        if (menuOpen) {
+            document.addEventListener('mousedown', handleOutsideClick);
+        } else {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, [menuOpen]);
+
+    useEffect(() => {
+        closeMenu();
+    }, [location]);
+
     return (
         <div className="admin-container">
             <button className="menu-toggle" onClick={toggleMenu}>
                 <span className="menu-icon"></span>
+                <span className="menu-icon"></span>
+                <span className="menu-icon"></span>
             </button>
-            <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
+            <div className={`sidebar ${menuOpen ? 'open' : ''}`} ref={sidebarRef}>
                 <h2>Admin Menu</h2>
                 <ul>
                     <li><Link to="/admin">Página Inicial</Link></li>

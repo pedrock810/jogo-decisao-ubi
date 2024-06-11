@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import './style/Admin.css';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 
 function UsersManage({ setIsLoggedIn }) {
     const [data, setData] = useState([]);
-     // eslint-disable-next-line
+    // eslint-disable-next-line
     const [editingUser, setEditingUser] = useState(null);
     const [editedUserInfo, setEditedUserInfo] = useState({
         id: '',
@@ -24,14 +24,16 @@ function UsersManage({ setIsLoggedIn }) {
 
     const [menuOpen, setMenuOpen] = useState(false);
 
+    const sidebarRef = useRef(null);
+    const navigate = useNavigate();
+    const location = useLocation();
+
     useEffect(() => {
         fetch('https://jogo-decisao-backend.onrender.com/admin/users')
             .then(res => res.json())
             .then(data => setData(data))
             .catch(err => console.log(err));
     }, []);
-
-    const navigate = useNavigate();
 
     const handleLogout = () => {
         setIsLoggedIn(false);
@@ -69,7 +71,7 @@ function UsersManage({ setIsLoggedIn }) {
                 }
             })
             .catch(err => console.log(err));
-    };    
+    };
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -90,11 +92,11 @@ function UsersManage({ setIsLoggedIn }) {
             }));
         }
     };
-    
+
     const handleDelete = (userId) => {
         setUserIdToDelete(userId);
         setOpenDeleteModal(true);
-    };    
+    };
 
     const confirmDeleteUser = () => {
         axios.delete(`https://jogo-decisao-backend.onrender.com/admin/users/${userIdToDelete}`)
@@ -115,12 +117,39 @@ function UsersManage({ setIsLoggedIn }) {
         setMenuOpen(!menuOpen);
     };
 
+    const closeMenu = () => {
+        setMenuOpen(false);
+    };
+
+    const handleOutsideClick = (event) => {
+        if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+            closeMenu();
+        }
+    };
+
+    useEffect(() => {
+        if (menuOpen) {
+            document.addEventListener('mousedown', handleOutsideClick);
+        } else {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, [menuOpen]);
+
+    useEffect(() => {
+        closeMenu();
+    }, [location]);
+
     return (
         <div className="admin-container">
             <button className="menu-toggle" onClick={toggleMenu}>
                 <span className="menu-icon"></span>
+                <span className="menu-icon"></span>
+                <span className="menu-icon"></span>
             </button>
-            <div className={`sidebar ${menuOpen ? 'open' : ''}`}>
+            <div className={`sidebar ${menuOpen ? 'open' : ''}`} ref={sidebarRef}>
                 <h2>Admin Menu</h2>
                 <ul>
                     <li><Link to="/admin">Página Inicial</Link></li>
