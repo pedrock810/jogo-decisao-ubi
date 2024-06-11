@@ -279,12 +279,15 @@ app.get('/ranking', (req, res) => {
 // Rota para salvar uma recompensa comprada pelo usuário
 app.post('/user/recompensas', (req, res) => {
     const { userId, recompensaId } = req.body;
-
+    
     const sql = "INSERT INTO recompensas_compradas (user_id, recompensa_id) VALUES (?, ?)";
     const values = [userId, recompensaId];
 
+    console.log('Dados recebidos para inserir em recompensas_compradas:', values);  // Adicione este log
+
     db.query(sql, values, (err, data) => {
         if (err) {
+            console.error('Erro ao inserir recompensa comprada:', err);  // Adicione este log
             return res.json("Error");
         }
         return res.json("Success");
