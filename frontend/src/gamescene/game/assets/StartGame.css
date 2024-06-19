@@ -1,7 +1,13 @@
 .card-container {
-  width: 400px;
+  width: 90%; 
+  max-width: 400px; 
+  width: 90%; 
+  max-width: 400px; 
   position: relative;
+  margin: 0 auto; 
+  margin: 0 auto; 
 }
+
 .card {
   background-color: #ffffff;
   border-radius: 10px;
@@ -12,6 +18,7 @@
   transition: transform 0.3s ease;
   touch-action: pan-y;
   user-select: none;
+  width: 100%;
 }
 .card h2 {
   font-size: 24px;
@@ -92,11 +99,9 @@
   z-index: 9999;
   font-size: 16px;
   font-weight: bold;
-  transition: opacity 0.3s ease;
-  max-width: 80%; /* Define a largura máxima */
-  word-wrap: break-word; /* Faz a quebra de linha para textos longos */
+  max-width: 80%; 
+  word-wrap: break-word; 
 }
-
 @media only screen and (min-width: 768px) {
   .arrows {
     display: flex; 
@@ -107,6 +112,7 @@
     z-index: 999; 
   }
 }
+
 @media only screen and (max-width: 767px) {
   .card {
     height: 70vh !important;
@@ -116,29 +122,19 @@
     align-items: center;
   }
   .card h2 {
-    font-size: 24px; 
+    font-size: 20px; 
     margin-bottom: 10px;
     text-align: center; 
   }
-
   .feedback-message {
-    bottom: 20px;
-    width: 90%;
-    left: 50%;
-    transform: translateX(-50%);
     top: 10px;
     left: 10px;
-    bottom: auto; /* Remove o valor inferior */
-    width: auto; /* Ajusta a largura automaticamente */
-    max-width: 90%; /* Define a largura máxima */
+    bottom: auto; 
+    width: auto; 
+    max-width: 90%; 
     font-size: 14px; 
     padding: 8px;
-    transform: none; /* Remove a centralização horizontal */
-    word-wrap: break-word; /* Faz a quebra de linha para textos longos */
+    transform: none; 
+    word-wrap: break-word; 
   }
-}
-
-.feedback-message.mobile {
-  top: 10px;
-  right: 110px;
 }
